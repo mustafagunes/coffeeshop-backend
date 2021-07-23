@@ -35,7 +35,7 @@ namespace CoffeeShop.API
             });
             
             // Connect Database
-            // dotnet ef migrations add initial-migration -s ../API/
+            // dotnet ef --startup-project ../API migrations add initial-migration
             // dotnet ef database update -s ../API/
             services.AddDbContext<AppDbContext>(options =>
             {
