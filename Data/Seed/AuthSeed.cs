@@ -34,7 +34,7 @@ namespace Data.Seed
                 };
                 foreach (var currentUser in users.Select(user => new AppUser
                 {
-                    DisplayName = user,
+                    FullName = user,
                     Email = user + "@email.com",
                     UserName = user + "123",
                 }))
@@ -46,7 +46,7 @@ namespace Data.Seed
                 // Admin
                 var admin = new AppUser
                 {
-                    DisplayName = "mustafagunes",
+                    FullName = "mustafa gunes",
                     Email = "gunes149" + "@gmail.com",
                     UserName = "mustafa" + "123",
                 };

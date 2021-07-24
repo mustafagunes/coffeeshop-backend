@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210723154759_initial-migration")]
+    [Migration("20210724061134_initial-migration")]
     partial class initialmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,11 +36,6 @@ namespace Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("character varying(20)")
-                        .HasMaxLength(20);
-
                     b.Property<string>("Email")
                         .HasColumnType("character varying(256)")
                         .HasMaxLength(256);
@@ -50,6 +45,11 @@ namespace Data.Migrations
 
                     b.Property<string>("FcmToken")
                         .HasColumnType("text");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(20);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");

@@ -34,11 +34,6 @@ namespace Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasColumnType("character varying(20)")
-                        .HasMaxLength(20);
-
                     b.Property<string>("Email")
                         .HasColumnType("character varying(256)")
                         .HasMaxLength(256);
@@ -48,6 +43,11 @@ namespace Data.Migrations
 
                     b.Property<string>("FcmToken")
                         .HasColumnType("text");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(20);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");

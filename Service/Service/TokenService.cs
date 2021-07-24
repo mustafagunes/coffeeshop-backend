@@ -34,7 +34,7 @@ namespace Service.Service
             {
                 new Claim(ClaimTypes.PrimarySid, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.GivenName, user.DisplayName),
+                new Claim(ClaimTypes.GivenName, user.FullName),
             };
             
             // Add Role to claim

@@ -41,7 +41,7 @@ namespace Data.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    DisplayName = table.Column<string>(maxLength: 20, nullable: false),
+                    FullName = table.Column<string>(maxLength: 70, nullable: false),
                     ApnsToken = table.Column<string>(nullable: true),
                     FcmToken = table.Column<string>(nullable: true)
                 },

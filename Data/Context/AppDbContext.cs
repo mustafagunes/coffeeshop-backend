@@ -26,8 +26,8 @@ namespace Data.Context
             // modelBuilder.Entity<Person>().Property(x => x.SurName).HasMaxLength(100);
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<AppUser>().Property(a => a.DisplayName)
-                .HasMaxLength(20)
+            modelBuilder.Entity<AppUser>().Property(a => a.FullName)
+                .HasMaxLength(70)
                 .IsRequired();
         }
     }
