@@ -1,4 +1,6 @@
 using System.Net;
+using Core.Extensions;
+using Core.Security;
 using Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -9,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
-using Service.Extensions;
 
 namespace CoffeeShop.API
 {
@@ -35,27 +36,32 @@ namespace CoffeeShop.API
             });
             
             // Connect Database
-            // dotnet ef --startup-project ../API migrations add initial-migration
+            // Data Klasörünün içinde -> dotnet ef --startup-project ../API migrations add initial-migration
             // dotnet ef database update -s ../API/
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<CoffeeShopDbContext>(options =>
             {
-                var connStr = Configuration.GetConnectionString("Db");
+                var connStr = Configuration.GetConnectionString("Database");
                 options.UseNpgsql(connStr, o =>
                 {
                     o.MigrationsAssembly("Data");
                 });         
             });
 
+            // JwtSettings in appsettings.json configs
+            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
+
+            // Injected Classes
             services.AddApplicationServices();
             
             // Add Identity Services
-            services.AddIdentityServices(Configuration);
-            
-            // IPokemonRepository Added
-            // services.AddScoped<IPokemonRepository, PokemonRepository>();
+            var jwtSettings = Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+            services.AddIdentityServices(jwtSettings);
             
             // Swagger Implementation
             services.AddSwaggerDocumentation();
+
+            // Authorization
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

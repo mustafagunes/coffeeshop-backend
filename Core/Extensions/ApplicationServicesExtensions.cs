@@ -1,14 +1,13 @@
-using Core.Interface.Auth;
+using Core.Security;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Service;
 
-namespace Service.Extensions
+namespace Core.Extensions
 {
     public static class ApplicationServicesExtensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IJwtHelper, JwtHelper>();
             return services;
         }
     }
