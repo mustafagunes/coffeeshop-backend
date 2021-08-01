@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Core.Extensions
+namespace CoffeeShop.API.Extension
 {
     public static class IdentityServiceExtensions
     {

@@ -1,7 +1,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 
-namespace Core.Extensions
+namespace CoffeeShop.API.Extension
 {
     public static class HttpRequestExtensions
     {

@@ -1,7 +1,8 @@
 using System.Net;
-using Core.Extensions;
+using CoffeeShop.API.Extension;
 using Core.Security;
 using Data.Context;
+using Data.DI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
+using Service.DI;
 
 namespace CoffeeShop.API
 {
@@ -49,6 +51,12 @@ namespace CoffeeShop.API
 
             // JwtSettings in appsettings.json configs
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
+            
+            // Injected Data layer 
+            services.DataConfiguration();
+
+            // Injected Service layer
+            services.ServiceConfiguration();
 
             // Injected Classes
             services.AddApplicationServices();

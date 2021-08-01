@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace Core.Extensions
+namespace CoffeeShop.API.Extension
 {
     public static class SwaggerServiceExtensions
     {
