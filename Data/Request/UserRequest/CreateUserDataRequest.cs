@@ -15,14 +15,6 @@ namespace Data.Request.UserRequest
         public string ApnsToken { get; set; }
         public string FcmToken { get; set; }
     }
-    
-    // public class RegisterDataResponse
-    // {
-    //     public string Email { get; set; }
-    //     public string FullName { get; set; }
-    //     public string Token { get; set; }
-    //     public string Id { get; set; }
-    // }
 
     public class RegisterUserDataRequestHandler : IRequestHandler<RegisterUserDataRequest, User>
     {

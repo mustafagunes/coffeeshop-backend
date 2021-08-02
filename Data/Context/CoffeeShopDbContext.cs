@@ -17,8 +17,9 @@ namespace Data.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // User
-            modelBuilder.Entity<User>().Property(m => m.ApnsToken).IsRequired(false);
-            modelBuilder.Entity<User>().Property(m => m.FcmToken).IsRequired(false);
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+            modelBuilder.Entity<User>().Property(u => u.ApnsToken).IsRequired(false);
+            modelBuilder.Entity<User>().Property(u => u.FcmToken).IsRequired(false);
 
             // User Role
             modelBuilder.Entity<UserRole>().HasNoKey();

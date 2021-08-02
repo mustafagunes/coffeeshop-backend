@@ -1,13 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Model;
+using Core.Model.Base;
 using Core.Security;
 using Data.Request.UserRequest;
 using MediatR;
 
 namespace Service.Account
 {
-    public class RegisterServiceRequest : IRequest<User>
+    public class RegisterServiceRequest : IRequest<BaseObjectResponse<User>>
     {
         public string Email { get; set; }
         public string FullName { get; set; }
@@ -16,16 +17,7 @@ namespace Service.Account
         public string FcmToken { get; set; }
     }
     
-    // public class RegisterServiceResponse
-    // {
-    //     public string Email { get; set; }
-    //     public string FullName { get; set; }
-    //     public string Token { get; set; }
-    //     public string Id { get; set; }
-    //     public string Platform { get; set; }
-    // }
-    
-    public class RegisterServiceRequestHandler : IRequestHandler<RegisterServiceRequest, User>
+    public class RegisterServiceRequestHandler : IRequestHandler<RegisterServiceRequest, BaseObjectResponse<User>>
     {
         // Definitions
         private readonly IMediator _mediator;
@@ -37,7 +29,7 @@ namespace Service.Account
             _jwtHelper = jwtHelper;
         }
 
-        public async Task<User> Handle(RegisterServiceRequest request, CancellationToken cancellationToken)
+        public async Task<BaseObjectResponse<User>> Handle(RegisterServiceRequest request, CancellationToken cancellationToken)
         {
             var user = await _mediator.Send(new RegisterUserDataRequest()
             {
@@ -46,9 +38,16 @@ namespace Service.Account
                 ApnsToken = request.ApnsToken,
                 FcmToken = request.FcmToken,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            });
+            }, cancellationToken);
+            
+            var response = new BaseObjectResponse<User>()
+            {
+                Status = true,
+                Message = "Success",
+                Data = user
+            };
 
-            return user;
+            return response;
         }
     }
 }

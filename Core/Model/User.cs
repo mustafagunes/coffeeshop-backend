@@ -9,7 +9,9 @@ namespace Core.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string FullName { get; set; }
+        [Required]
         public string Email { get; set; }
+        [Required]
         public string Password { get; set; }
         public string RefreshToken { get; set; }
         public bool IsLoggedIn { get; set; }
