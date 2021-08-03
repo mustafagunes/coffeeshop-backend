@@ -1,8 +1,10 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Interface;
 using Core.Model;
 using Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repository
 {
@@ -17,10 +19,13 @@ namespace Data.Repository
         {
         }
 
-        public async Task<User> GetWithEmailAsync(string email)
+        public async Task<User> GetWithEmailAsync(string email, CancellationToken cancellationToken)
         {
             var user = from u in DbContext.Users select u;
-            user = user.Where(u => u.Email.ToLower().Contains(email));
+
+            await user.SingleOrDefaultAsync(cancellationToken);
+            
+            user = user.Where (u => u.Email.ToLower().Contains(email));
             var result = user.ToArray().First();
             return result;
         }

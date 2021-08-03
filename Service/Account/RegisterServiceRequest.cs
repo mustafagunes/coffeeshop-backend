@@ -8,46 +8,59 @@ using MediatR;
 
 namespace Service.Account
 {
-    public class RegisterServiceRequest : IRequest<BaseObjectResponse<User>>
+    public class RegisterServiceRequest : IRequest<RegisterServiceRequestResponse>
     {
-        public string Email { get; set; }
-        public string FullName { get; set; }
-        public string Password { get; set; }
-        public string ApnsToken { get; set; }
-        public string FcmToken { get; set; }
+        public RegisterServiceRequest(string email, string fullName, string password, string apnsToken, string fcmToken)
+        {
+            Email = email;
+            FullName = fullName;
+            Password = password;
+            ApnsToken = apnsToken;
+            FcmToken = fcmToken;
+        }
+
+        public string Email { get; }
+        public string FullName { get; }
+        public string Password { get; }
+        public string ApnsToken { get; }
+        public string FcmToken { get; }
     }
-    
-    public class RegisterServiceRequestHandler : IRequestHandler<RegisterServiceRequest, BaseObjectResponse<User>>
+
+    public class RegisterServiceRequestHandler : IRequestHandler<RegisterServiceRequest, RegisterServiceRequestResponse>
     {
         // Definitions
         private readonly IMediator _mediator;
         private readonly IJwtHelper _jwtHelper;
-        
+
         public RegisterServiceRequestHandler(IMediator mediator, IJwtHelper jwtHelper)
         {
             _mediator = mediator;
             _jwtHelper = jwtHelper;
         }
 
-        public async Task<BaseObjectResponse<User>> Handle(RegisterServiceRequest request, CancellationToken cancellationToken)
+        public async Task<RegisterServiceRequestResponse> Handle(RegisterServiceRequest request, CancellationToken cancellationToken)
         {
-            var user = await _mediator.Send(new RegisterUserDataRequest()
-            {
-                FullName = request.FullName,
-                Email = request.Email,
-                ApnsToken = request.ApnsToken,
-                FcmToken = request.FcmToken,
-                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            }, cancellationToken);
+            var hashPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+            var user = await _mediator.Send(new RegisterUserDataRequest(request.Email, request.FullName, hashPassword, request.ApnsToken, request.FcmToken), cancellationToken);
             
-            var response = new BaseObjectResponse<User>()
+            var response = new RegisterServiceRequestResponse
             {
-                Status = true,
-                Message = "Success",
-                Data = user
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                RefreshToken = user.RefreshToken
             };
 
             return response;
         }
+    }
+
+    public class RegisterServiceRequestResponse
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

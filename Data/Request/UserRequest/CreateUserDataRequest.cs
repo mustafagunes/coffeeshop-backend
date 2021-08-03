@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Interface;
@@ -9,11 +11,20 @@ namespace Data.Request.UserRequest
 {
     public class RegisterUserDataRequest : IRequest<User>
     {
-        public string Email { get; set; }
-        public string FullName { get; set; }
-        public string Password { get; set; }
-        public string ApnsToken { get; set; }
-        public string FcmToken { get; set; }
+        public RegisterUserDataRequest(string email, string fullName, string password, string apnsToken, string fcmToken)
+        {
+            Email = email;
+            FullName = fullName;
+            Password = password;
+            ApnsToken = apnsToken;
+            FcmToken = fcmToken;
+        }
+
+        public string Email { get; }
+        public string FullName { get; }
+        public string Password { get; }
+        public string ApnsToken { get; }
+        public string FcmToken { get; }
     }
 
     public class RegisterUserDataRequestHandler : IRequestHandler<RegisterUserDataRequest, User>
@@ -36,10 +47,10 @@ namespace Data.Request.UserRequest
                 ApnsToken = request.ApnsToken,
                 FcmToken = request.FcmToken
             };
-
+            
             await _repository.AddAsync(userModel);
 
-            var user = await _repository.GetWithEmailAsync(userModel.Email);
+            var user = await _repository.GetWithEmailAsync(userModel.Email, cancellationToken);
 
             return user;
         }

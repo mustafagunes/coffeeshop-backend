@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using CoffeeShop.API.Models;
+using CoffeeShop.API.Models.Account;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Service.Account;
@@ -9,7 +11,6 @@ namespace CoffeeShop.API.Controllers
     [Route("api/account")]
     public class AccountController : ControllerBase
     {
-        
         // Definitions
         private readonly IMediator _mediator;
 
@@ -19,12 +20,13 @@ namespace CoffeeShop.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterServiceRequest registerServiceRequest)
+        public async Task<IActionResult> Register([FromBody] RegisterServiceRequestModel model)
         {
-            var user = await _mediator.Send(registerServiceRequest);
+            var user = await _mediator.Send(new RegisterServiceRequest(model.Email, model.FullName, model.Password, model.ApnsToken, model.FcmToken));
+            
             return Ok(user);
         }
-        
+
         # region legacy code
 
         // // Definitions
