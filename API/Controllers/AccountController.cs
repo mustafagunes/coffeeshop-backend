@@ -3,7 +3,7 @@ using CoffeeShop.API.Models;
 using CoffeeShop.API.Models.Account;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Service.Account;
+using Service.Request.V1.Account;
 
 namespace CoffeeShop.API.Controllers
 {
@@ -22,7 +22,15 @@ namespace CoffeeShop.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterServiceRequestModel model)
         {
-            var user = await _mediator.Send(new RegisterServiceRequest(model.Email, model.FullName, model.Password, model.ApnsToken, model.FcmToken));
+            var user = await _mediator.Send(new 
+                RegisterServiceRequest(
+                    model.Email,
+                    model.FullName,
+                    model.Password,
+                    model.ApnsToken,
+                    model.FcmToken
+                )
+            );
             
             return Ok(user);
         }

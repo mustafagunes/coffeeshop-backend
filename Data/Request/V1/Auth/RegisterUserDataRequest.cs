@@ -1,17 +1,15 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Interface;
 using Core.Model;
-using Data.Context;
+using Data.Request.V1.Account;
 using MediatR;
 
-namespace Data.Request.UserRequest
+namespace Data.Request.V1.Auth
 {
-    public class RegisterUserDataRequest : IRequest<User>
+    public class LoginDataRequest : IRequest<User>
     {
-        public RegisterUserDataRequest(string email, string fullName, string password, string apnsToken, string fcmToken)
+        public LoginDataRequest(string email, string fullName, string password, string apnsToken, string fcmToken)
         {
             Email = email;
             FullName = fullName;
@@ -27,17 +25,17 @@ namespace Data.Request.UserRequest
         public string FcmToken { get; }
     }
 
-    public class RegisterUserDataRequestHandler : IRequestHandler<RegisterUserDataRequest, User>
+    public class LoginDataRequestHandler : IRequestHandler<LoginDataRequest, User>
     {
         // Definitions
         private readonly IUserRepository _repository;
 
-        public RegisterUserDataRequestHandler(IUserRepository repository)
+        public LoginDataRequestHandler(IUserRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<User> Handle(RegisterUserDataRequest request, CancellationToken cancellationToken)
+        public async Task<User> Handle(LoginDataRequest request, CancellationToken cancellationToken)
         {
             var userModel = new User
             {
@@ -48,7 +46,7 @@ namespace Data.Request.UserRequest
                 FcmToken = request.FcmToken
             };
             
-            await _repository.AddAsync(userModel);
+            // await _repository.AddAsync(userModel);
 
             var user = await _repository.GetWithEmailAsync(userModel.Email, cancellationToken);
 

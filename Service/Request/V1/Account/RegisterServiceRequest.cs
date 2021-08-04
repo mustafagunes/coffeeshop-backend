@@ -1,12 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Model;
-using Core.Model.Base;
 using Core.Security;
-using Data.Request.UserRequest;
+using Data.Request.V1.Account;
 using MediatR;
 
-namespace Service.Account
+namespace Service.Request.V1.Account
 {
     public class RegisterServiceRequest : IRequest<RegisterServiceRequestResponse>
     {
@@ -42,7 +40,15 @@ namespace Service.Account
         {
             var hashPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            var user = await _mediator.Send(new RegisterUserDataRequest(request.Email, request.FullName, hashPassword, request.ApnsToken, request.FcmToken), cancellationToken);
+            var user = await _mediator.Send(new 
+                RegisterUserDataRequest(
+                    request.Email,
+                    request.FullName,
+                    hashPassword,
+                    request.ApnsToken,
+                    request.FcmToken
+                ), cancellationToken
+            );
             
             var response = new RegisterServiceRequestResponse
             {

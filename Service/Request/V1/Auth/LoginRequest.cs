@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace Service.V1.Auth
+namespace Service.Request.V1.Auth
 {
     public class LoginRequest : IRequest<LoginRequestResponse>
     {

@@ -10,7 +10,7 @@ namespace Data.Repository
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        private CoffeeShopDbContext DbContext
+        private CoffeeShopDbContext _dbContext
         {
             get => _context as CoffeeShopDbContext;
         }
@@ -21,13 +21,14 @@ namespace Data.Repository
 
         public async Task<User> GetWithEmailAsync(string email, CancellationToken cancellationToken)
         {
-            var user = from u in DbContext.Users select u;
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+            return user;
+        }
 
-            await user.SingleOrDefaultAsync(cancellationToken);
-            
-            user = user.Where (u => u.Email.ToLower().Contains(email));
-            var result = user.ToArray().First();
-            return result;
+        public async Task<User> Login(string email, string password, CancellationToken cancellationToken)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password, cancellationToken);
+            return user;
         }
     }
 }

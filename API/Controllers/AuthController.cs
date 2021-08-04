@@ -4,8 +4,7 @@ using CoffeeShop.API.Models.Account;
 using CoffeeShop.API.Models.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Service.Account;
-using Service.V1.Auth;
+using Service.Request.V1.Auth;
 
 namespace CoffeeShop.API.Controllers
 {

@@ -8,5 +8,7 @@ namespace Core.Interface
     {
         // async method pass cancellationToken
         Task<User> GetWithEmailAsync(string email, CancellationToken cancellationToken);
+        
+        Task<User> Login(string email, string password, CancellationToken cancellationToken);
     }
 }
