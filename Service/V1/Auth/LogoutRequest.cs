@@ -26,7 +26,7 @@ namespace Service.V1.Auth
 
         public async Task<LogoutRequestResponse> Handle(LogoutRequest request, CancellationToken cancellationToken)
         {
-            // delete refresh token by user id
+            // delete all refresh token by user id
             
             var response = new LogoutRequestResponse
             {
