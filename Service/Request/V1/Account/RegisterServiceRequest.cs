@@ -55,7 +55,6 @@ namespace Service.Request.V1.Account
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
-                RefreshToken = user.RefreshToken
             };
 
             return response;
@@ -67,6 +66,5 @@ namespace Service.Request.V1.Account
         public int Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        public string RefreshToken { get; set; }
     }
 }

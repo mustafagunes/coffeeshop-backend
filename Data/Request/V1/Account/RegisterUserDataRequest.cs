@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Interface;
@@ -26,12 +27,13 @@ namespace Data.Request.V1.Account
 
     public class RegisterUserDataRequestHandler : IRequestHandler<RegisterUserDataRequest, User>
     {
-        // Definitions
-        private readonly IUserRepository _repository;
+        private readonly IUserRepository _userRepository;
+        private readonly IRepository<RefreshToken> _refreshTokenRepository;
 
-        public RegisterUserDataRequestHandler(IUserRepository repository)
+        public RegisterUserDataRequestHandler(IUserRepository userRepository, IRepository<RefreshToken> refreshTokenRepository)
         {
-            _repository = repository;
+            _userRepository = userRepository;
+            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public async Task<User> Handle(RegisterUserDataRequest request, CancellationToken cancellationToken)
@@ -44,10 +46,19 @@ namespace Data.Request.V1.Account
                 ApnsToken = request.ApnsToken,
                 FcmToken = request.FcmToken
             };
-            
-            await _repository.AddAsync(userModel);
 
-            var user = await _repository.GetWithEmailAsync(userModel.Email, cancellationToken);
+            await _userRepository.AddAsync(userModel);
+            
+            var user = await _userRepository.GetWithEmailAsync(userModel.Email, cancellationToken);
+
+            var refreshToken = new RefreshToken
+            {
+                UserId = user.Id,
+                Token = Guid.NewGuid().ToString(),
+                DateEnd = DateTime.Now.AddDays(30)
+            };
+
+            await _refreshTokenRepository.AddAsync(refreshToken);
 
             return user;
         }

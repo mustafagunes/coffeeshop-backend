@@ -13,8 +13,6 @@ namespace Core.Model
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
-        public string RefreshToken { get; set; }
-        public bool IsLoggedIn { get; set; }
         public string ApnsToken { get; set; }
         public string FcmToken { get; set; }
     }
