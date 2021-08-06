@@ -10,7 +10,7 @@ namespace CoffeeShop.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize(Roles = Role.Admin + "," + Role.User)]
+    [Authorize(Roles = "1")] // 1 user tipini temsil eder.
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

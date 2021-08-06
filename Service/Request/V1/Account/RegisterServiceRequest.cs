@@ -28,23 +28,19 @@ namespace Service.Request.V1.Account
     {
         // Definitions
         private readonly IMediator _mediator;
-        private readonly IJwtHelper _jwtHelper;
 
-        public RegisterServiceRequestHandler(IMediator mediator, IJwtHelper jwtHelper)
+        public RegisterServiceRequestHandler(IMediator mediator)
         {
             _mediator = mediator;
-            _jwtHelper = jwtHelper;
         }
 
         public async Task<RegisterServiceRequestResponse> Handle(RegisterServiceRequest request, CancellationToken cancellationToken)
         {
-            var hashPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
-
             var user = await _mediator.Send(new 
                 RegisterUserDataRequest(
                     request.Email,
                     request.FullName,
-                    hashPassword,
+                    request.Password,
                     request.ApnsToken,
                     request.FcmToken
                 ), cancellationToken

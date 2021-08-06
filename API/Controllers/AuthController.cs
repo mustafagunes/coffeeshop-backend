@@ -8,7 +8,6 @@ using Service.Request.V1.Auth;
 
 namespace CoffeeShop.API.Controllers
 {
-    
     /*
      * Auth akışı özet
      * Kullanıcı sisteme girer register olur. Register olduğunda kullanıcıya 5 dakikalık AccessToken üretilir. Kullanıcı login olurken
@@ -39,7 +38,7 @@ namespace CoffeeShop.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestModel model)
         {
-            var token = await _mediator.Send(new LoginRequest(model.Email, model.Password));
+            var token = await _mediator.Send(new LoginServiceRequest(model.Email, model.Password));
 
             return Ok(token);
         }

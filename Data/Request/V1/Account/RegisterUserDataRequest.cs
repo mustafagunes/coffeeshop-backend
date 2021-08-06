@@ -28,12 +28,10 @@ namespace Data.Request.V1.Account
     public class RegisterUserDataRequestHandler : IRequestHandler<RegisterUserDataRequest, User>
     {
         private readonly IUserRepository _userRepository;
-        private readonly IRepository<RefreshToken> _refreshTokenRepository;
 
-        public RegisterUserDataRequestHandler(IUserRepository userRepository, IRepository<RefreshToken> refreshTokenRepository)
+        public RegisterUserDataRequestHandler(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _refreshTokenRepository = refreshTokenRepository;
         }
 
         public async Task<User> Handle(RegisterUserDataRequest request, CancellationToken cancellationToken)
@@ -42,6 +40,7 @@ namespace Data.Request.V1.Account
             {
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                RoleId = "1",
                 FullName = request.FullName,
                 ApnsToken = request.ApnsToken,
                 FcmToken = request.FcmToken
@@ -50,15 +49,6 @@ namespace Data.Request.V1.Account
             await _userRepository.AddAsync(userModel);
             
             var user = await _userRepository.GetWithEmailAsync(userModel.Email, cancellationToken);
-
-            var refreshToken = new RefreshToken
-            {
-                UserId = user.Id,
-                Token = Guid.NewGuid().ToString(),
-                DateEnd = DateTime.Now.AddDays(30)
-            };
-
-            await _refreshTokenRepository.AddAsync(refreshToken);
 
             return user;
         }

@@ -27,8 +27,10 @@ namespace Data.Repository
 
         public async Task<User> Login(string email, string password, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password, cancellationToken);
-            return user;
+            var user = await GetWithEmailAsync(email, cancellationToken);
+            var isVerify = BCrypt.Net.BCrypt.Verify(password, user.Password);
+
+            return !isVerify ? null : user;
         }
     }
 }
