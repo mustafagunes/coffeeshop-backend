@@ -22,7 +22,7 @@ namespace Core.Interface
 
         Task AddRangeAsync(IEnumerable<TEntity> entities);
 
-        void Remove(TEntity entity);
+        bool Remove(TEntity entity);
 
         void RemoveRange(IEnumerable<TEntity> entities);
 

@@ -39,7 +39,7 @@ namespace Service.Request.V1.Auth
                         request.Password
                     ), cancellationToken
             );
-            
+
             if (loginDataRequestResponse == null)
                 return new BaseObjectResponse(false, "Kullanıcı bulunamadı", null);
 

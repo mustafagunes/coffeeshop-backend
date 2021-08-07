@@ -12,5 +12,7 @@ namespace Core.Model
         public int UserId { get; set; }
         public string Token { get; set; }
         public DateTime DateEnd { get; set; }
+        
+        public bool IsExpired() => DateTime.UtcNow >= DateEnd;
     }
 }

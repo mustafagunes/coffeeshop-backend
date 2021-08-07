@@ -44,7 +44,7 @@ namespace Data.Repository
         }
 
         public async Task<bool> AddAsync(TEntity entity)
-        { 
+        {
             await _dbSet.AddAsync(entity);
             var result = await SaveAsync();
             return result;
@@ -55,9 +55,11 @@ namespace Data.Repository
             await _dbSet.AddRangeAsync(entities);
         }
 
-        public void Remove(TEntity entity)
+        public bool Remove(TEntity entity)
         {
             _dbSet.Remove(entity);
+            var result = Save();
+            return result;
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)
@@ -76,6 +78,18 @@ namespace Data.Repository
             try
             {
                 return (await _context.SaveChangesAsync() > 0);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        
+        private bool Save()
+        {
+            try
+            {
+                return (_context.SaveChanges() > 0);
             }
             catch (Exception e)
             {

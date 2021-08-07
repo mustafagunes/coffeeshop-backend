@@ -45,20 +45,16 @@ namespace Data.Request.V1.Auth
 
             var refreshTokenModel = new RefreshToken
             {
-                UserId = user!.Id,
+                UserId = user.Id,
                 Token = Guid.NewGuid().ToString(),
                 DateEnd = DateTime.Now.AddDays(30)
             };
-            
+
+            var tokens = await _refreshTokenRepository.Where(t => t.UserId == user.Id);
+            _refreshTokenRepository.RemoveRange(tokens);
             await _refreshTokenRepository.AddAsync(refreshTokenModel);
-
-            var claims = new List<Claim>() {
-                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
-                new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.Role,user.RoleId.ToString()),
-            };
-
-            var accessToken = _jwtHelper.CreateToken(claims);
+            
+            var accessToken = _jwtHelper.CreateToken(user: user);
             var refreshToken = refreshTokenModel.Token;
 
             var loginResponse = new LoginDataRequestResponse

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Core.Model;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Core.Security
 {
     public interface IJwtHelper
-    {
-        string CreateToken(IEnumerable<Claim> claims);
-
+    { 
+        string CreateToken(User user);
     }
 
     public class JwtHelper : IJwtHelper
@@ -24,8 +24,14 @@ namespace Core.Security
             _jwtSettings = options.Value;
         }
 
-        public string CreateToken(IEnumerable<Claim> claims)
+        public string CreateToken(User user)
         {
+            var claims = new List<Claim>() {
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.Role,user.RoleId.ToString()),
+            };
+            
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
 
