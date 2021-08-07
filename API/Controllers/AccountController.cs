@@ -22,7 +22,7 @@ namespace CoffeeShop.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterServiceRequestModel model)
         {
-            var user = await _mediator.Send(new 
+            var response = await _mediator.Send(new 
                 RegisterServiceRequest(
                     model.Email,
                     model.FullName,
@@ -32,7 +32,7 @@ namespace CoffeeShop.API.Controllers
                 )
             );
             
-            return Ok(user);
+            return (response.Status == true) ? (IActionResult) Ok(response) : BadRequest(response);
         }
 
         # region legacy code

@@ -1,11 +1,18 @@
 namespace Core.Model.Base
 {
-    public class BaseObjectResponse<T>
+    public class BaseObjectResponse
     {
-        public bool Status { get; set; }
+        public bool Status { get; private set; }
         
-        public string Message { get; set; }
+        public string Message { get; private set; }
         
-        public T Data { get; set; }
+        public object Data { get; private set; }
+        
+        public BaseObjectResponse(bool status, string message, object data)
+        {
+            Status = status;
+            Message = message;
+            Data = data;
+        }
     }
 }

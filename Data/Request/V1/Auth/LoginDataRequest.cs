@@ -5,12 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Interface;
 using Core.Model;
+using Core.Model.Base;
 using Core.Security;
 using MediatR;
 
 namespace Data.Request.V1.Auth
 {
-    public class LoginDataRequest : IRequest<LoginRequestResponse>
+    public class LoginDataRequest : IRequest<LoginDataRequestResponse>
     {
         public LoginDataRequest(string email, string password)
         {
@@ -22,7 +23,7 @@ namespace Data.Request.V1.Auth
         public string Password { get; }
     }
 
-    public class LoginDataRequestHandler : IRequestHandler<LoginDataRequest, LoginRequestResponse>
+    public class LoginDataRequestHandler : IRequestHandler<LoginDataRequest, LoginDataRequestResponse>
     {
         private readonly IJwtHelper _jwtHelper;
         private readonly IUserRepository _userRepository;
@@ -35,14 +36,12 @@ namespace Data.Request.V1.Auth
             _refreshTokenRepository = refreshTokenRepository;
         }
 
-        public async Task<LoginRequestResponse> Handle(LoginDataRequest request, CancellationToken cancellationToken)
+        public async Task<LoginDataRequestResponse> Handle(LoginDataRequest request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.Login(request.Email, request.Password, cancellationToken);
             
-            if (user == null)
-            {
+            if (user == null) 
                 return null;
-            }
 
             var refreshTokenModel = new RefreshToken
             {
@@ -62,22 +61,24 @@ namespace Data.Request.V1.Auth
             var accessToken = _jwtHelper.CreateToken(claims);
             var refreshToken = refreshTokenModel.Token;
 
-            var response = new LoginRequestResponse
+            var loginResponse = new LoginDataRequestResponse
             {
-                UserId = user.Id,
+                Id = user.Id,
                 FullName = user.FullName,
+                Email = user.Email,
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
 
-            return response;
+            return loginResponse;
         }
     }
     
-    public class LoginRequestResponse
+    public class LoginDataRequestResponse
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
         public string FullName { get; set; }
+        public string Email { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
     }

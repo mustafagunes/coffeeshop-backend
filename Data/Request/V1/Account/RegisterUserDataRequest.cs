@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Data.Request.V1.Account
 {
-    public class RegisterUserDataRequest : IRequest<User>
+    public class RegisterUserDataRequest : IRequest<RegisterDataRequestResponse>
     {
         public RegisterUserDataRequest(string email, string fullName, string password, string apnsToken, string fcmToken)
         {
@@ -25,7 +25,7 @@ namespace Data.Request.V1.Account
         public string FcmToken { get; }
     }
 
-    public class RegisterUserDataRequestHandler : IRequestHandler<RegisterUserDataRequest, User>
+    public class RegisterUserDataRequestHandler : IRequestHandler<RegisterUserDataRequest, RegisterDataRequestResponse>
     {
         private readonly IUserRepository _userRepository;
 
@@ -34,7 +34,7 @@ namespace Data.Request.V1.Account
             _userRepository = userRepository;
         }
 
-        public async Task<User> Handle(RegisterUserDataRequest request, CancellationToken cancellationToken)
+        public async Task<RegisterDataRequestResponse> Handle(RegisterUserDataRequest request, CancellationToken cancellationToken)
         {
             var userModel = new User
             {
@@ -46,11 +46,30 @@ namespace Data.Request.V1.Account
                 FcmToken = request.FcmToken
             };
 
-            await _userRepository.AddAsync(userModel);
+            var result = await _userRepository.AddAsync(userModel);
+
+            if (result == false)
+                return null;
             
             var user = await _userRepository.GetWithEmailAsync(userModel.Email, cancellationToken);
 
-            return user;
+            if (user == null)
+                return null;
+
+            var response = new RegisterDataRequestResponse
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email
+            };
+
+            return response;
         }
+    }
+    public class RegisterDataRequestResponse
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
     }
 }

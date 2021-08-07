@@ -38,9 +38,9 @@ namespace CoffeeShop.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestModel model)
         {
-            var token = await _mediator.Send(new LoginServiceRequest(model.Email, model.Password));
+            var response = await _mediator.Send(new LoginServiceRequest(model.Email, model.Password));
 
-            return Ok(token);
+            return (response.Status == true) ? (IActionResult) Ok(response) : BadRequest(response);
         }
         
         // when any request returns 401 try to refresh token

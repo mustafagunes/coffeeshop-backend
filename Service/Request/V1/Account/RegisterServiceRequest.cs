@@ -1,12 +1,13 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Model.Base;
 using Core.Security;
 using Data.Request.V1.Account;
 using MediatR;
 
 namespace Service.Request.V1.Account
 {
-    public class RegisterServiceRequest : IRequest<RegisterServiceRequestResponse>
+    public class RegisterServiceRequest : IRequest<BaseObjectResponse>
     {
         public RegisterServiceRequest(string email, string fullName, string password, string apnsToken, string fcmToken)
         {
@@ -24,7 +25,7 @@ namespace Service.Request.V1.Account
         public string FcmToken { get; }
     }
 
-    public class RegisterServiceRequestHandler : IRequestHandler<RegisterServiceRequest, RegisterServiceRequestResponse>
+    public class RegisterServiceRequestHandler : IRequestHandler<RegisterServiceRequest, BaseObjectResponse>
     {
         // Definitions
         private readonly IMediator _mediator;
@@ -34,9 +35,9 @@ namespace Service.Request.V1.Account
             _mediator = mediator;
         }
 
-        public async Task<RegisterServiceRequestResponse> Handle(RegisterServiceRequest request, CancellationToken cancellationToken)
+        public async Task<BaseObjectResponse> Handle(RegisterServiceRequest request, CancellationToken cancellationToken)
         {
-            var user = await _mediator.Send(new 
+            var registerDataRequestResponse = await _mediator.Send(new 
                 RegisterUserDataRequest(
                     request.Email,
                     request.FullName,
@@ -45,22 +46,13 @@ namespace Service.Request.V1.Account
                     request.FcmToken
                 ), cancellationToken
             );
-            
-            var response = new RegisterServiceRequestResponse
-            {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email,
-            };
+
+            if (registerDataRequestResponse == null)
+                return new BaseObjectResponse(false, "Kayıt esnasında bir sorun oluştu. Lütfen tekrar deneyiniz!", null);
+
+            var response = new BaseObjectResponse(true, "Kayıt Başarılı!", registerDataRequestResponse);
 
             return response;
         }
-    }
-
-    public class RegisterServiceRequestResponse
-    {
-        public int Id { get; set; }
-        public string FullName { get; set; }
-        public string Email { get; set; }
     }
 }

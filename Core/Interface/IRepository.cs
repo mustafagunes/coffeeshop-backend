@@ -18,7 +18,7 @@ namespace Core.Interface
         // category.SingleOrDefaultAsync(x => x.name = "kalem")
         Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
 
-        Task AddAsync(TEntity entity);
+        Task<bool> AddAsync(TEntity entity);
 
         Task AddRangeAsync(IEnumerable<TEntity> entities);
 

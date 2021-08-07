@@ -43,10 +43,11 @@ namespace Data.Repository
             return await _dbSet.SingleOrDefaultAsync(predicate);
         }
 
-        public async Task AddAsync(TEntity entity)
-        {
+        public async Task<bool> AddAsync(TEntity entity)
+        { 
             await _dbSet.AddAsync(entity);
-            await SaveAsync();
+            var result = await SaveAsync();
+            return result;
         }
 
         public async Task AddRangeAsync(IEnumerable<TEntity> entities)
@@ -69,10 +70,17 @@ namespace Data.Repository
             _context.Entry(entity).State = EntityState.Modified;
             return entity;
         }
-        
-        public async Task<bool> SaveAsync()
+
+        private async Task<bool> SaveAsync()
         {
-            return (await _context.SaveChangesAsync() > 0);
+            try
+            {
+                return (await _context.SaveChangesAsync() > 0);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
     }
 }

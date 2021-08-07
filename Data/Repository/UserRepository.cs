@@ -28,6 +28,10 @@ namespace Data.Repository
         public async Task<User> Login(string email, string password, CancellationToken cancellationToken)
         {
             var user = await GetWithEmailAsync(email, cancellationToken);
+
+            if (user == null) 
+                return null;
+
             var isVerify = BCrypt.Net.BCrypt.Verify(password, user.Password);
 
             return !isVerify ? null : user;

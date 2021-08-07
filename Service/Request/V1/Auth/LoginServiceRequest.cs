@@ -1,13 +1,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Model.Base;
 using Core.Security;
 using Data.Request.V1.Auth;
 using MediatR;
 
 namespace Service.Request.V1.Auth
 {
-    public class LoginServiceRequest : IRequest<LoginRequestResponse>
+    public class LoginServiceRequest : IRequest<BaseObjectResponse>
     {
         public LoginServiceRequest(string email, string password)
         {
@@ -19,7 +20,7 @@ namespace Service.Request.V1.Auth
         public string Password { get; }
     }
 
-    public class LoginServiceRequestHandler : IRequestHandler<LoginServiceRequest, LoginRequestResponse>
+    public class LoginServiceRequestHandler : IRequestHandler<LoginServiceRequest, BaseObjectResponse>
     {
         private readonly IMediator _mediator;
         private readonly IJwtHelper _jwtHelper;
@@ -30,36 +31,21 @@ namespace Service.Request.V1.Auth
             _jwtHelper = jwtHelper;
         }
 
-        public async Task<LoginRequestResponse> Handle(LoginServiceRequest request, CancellationToken cancellationToken)
+        public async Task<BaseObjectResponse> Handle(LoginServiceRequest request, CancellationToken cancellationToken)
         {
-            var loginRequestResponse = await _mediator.Send(new 
+            var loginDataRequestResponse = await _mediator.Send(new 
                     LoginDataRequest(
                         request.Email,
                         request.Password
                     ), cancellationToken
             );
+            
+            if (loginDataRequestResponse == null)
+                return new BaseObjectResponse(false, "Kullanıcı bulunamadı", null);
 
-            // var user = get user by username and password
-
-            // if user not exist return exception
-
-            var response = new LoginRequestResponse
-            {
-                UserId = loginRequestResponse.UserId,
-                FullName = loginRequestResponse.FullName,
-                AccessToken = loginRequestResponse.AccessToken, // 5 min
-                RefreshToken = loginRequestResponse.RefreshToken // 30 day
-            };
+            var response = new BaseObjectResponse(true, "Giriş Başarılı!", loginDataRequestResponse);
 
             return response;
         }
-    }
-
-    public class LoginRequestResponse
-    {
-        public int UserId { get; set; }
-        public string FullName { get; set; }
-        public string AccessToken { get; set; }
-        public string RefreshToken { get; set; }
     }
 }
