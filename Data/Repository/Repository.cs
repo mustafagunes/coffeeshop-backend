@@ -65,6 +65,7 @@ namespace Data.Repository
         public void RemoveRange(IEnumerable<TEntity> entities)
         {
             _dbSet.RemoveRange(entities);
+            Save();
         }
 
         public TEntity Update(TEntity entity)

@@ -37,8 +37,7 @@ namespace Data.Request.V1.Auth
 
         public async Task<RefreshTokenDataRequestResponse> Handle(RefreshTokenDataRequest request, CancellationToken cancellationToken)
         {
-            var tokenResult = await _refreshTokenRepository.SingleOrDefaultAsync(t => t.Token == request.RefreshToken); 
-            //Where(t => t.Token == request.RefreshToken);
+            var tokenResult = await _refreshTokenRepository.SingleOrDefaultAsync(t => t.Token == request.RefreshToken);
 
             if (tokenResult == null)
                 return null;

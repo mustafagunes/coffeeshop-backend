@@ -43,8 +43,6 @@ namespace CoffeeShop.API.Controllers
             return response.Status ? (IActionResult) Ok(response) : BadRequest(response);
         }
         
-        // when any request returns 401 try to refresh token
-        // if refresh token returns 401 logout
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel model)
         {
@@ -53,16 +51,13 @@ namespace CoffeeShop.API.Controllers
             return response.Status ? (IActionResult) Ok(response) : BadRequest(response);
         }
 
+        // get user id from token
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout([FromBody] LogoutRequestModel model)
         {
-            // get user id from token
-            
-            var token = await _mediator.Send(new LogoutRequest(1));
+            var response = await _mediator.Send(new LogoutServiceRequest(model.UserId));
 
-            return Ok(token);
+            return Ok(response);
         }
-        
-        
     }
 }
