@@ -29,7 +29,7 @@ namespace Core.Security
             var claims = new List<Claim>() {
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.Role,user.RoleId.ToString()),
+                new Claim(ClaimTypes.Role,user.RoleId),
             };
             
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -40,7 +40,7 @@ namespace CoffeeShop.API.Controllers
         {
             var response = await _mediator.Send(new LoginServiceRequest(model.Email, model.Password));
 
-            return (response.Status == true) ? (IActionResult) Ok(response) : BadRequest(response);
+            return response.Status ? (IActionResult) Ok(response) : BadRequest(response);
         }
         
         // when any request returns 401 try to refresh token
@@ -48,9 +48,9 @@ namespace CoffeeShop.API.Controllers
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel model)
         {
-            var token = await _mediator.Send(new RefreshTokenRequest(model.RefreshToken));
+            var response = await _mediator.Send(new RefreshTokenRequest(model.RefreshToken));
 
-            return Ok(token);
+            return response.Status ? (IActionResult) Ok(response) : BadRequest(response);
         }
 
         [HttpPost("logout")]

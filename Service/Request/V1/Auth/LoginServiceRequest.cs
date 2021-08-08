@@ -33,11 +33,11 @@ namespace Service.Request.V1.Auth
 
         public async Task<BaseObjectResponse> Handle(LoginServiceRequest request, CancellationToken cancellationToken)
         {
-            var loginDataRequestResponse = await _mediator.Send(new 
-                    LoginDataRequest(
-                        request.Email,
-                        request.Password
-                    ), cancellationToken
+            var loginDataRequestResponse = await _mediator.Send(
+                new LoginDataRequest(
+                    request.Email,
+                    request.Password
+                ), cancellationToken
             );
 
             if (loginDataRequestResponse == null)
