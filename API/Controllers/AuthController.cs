@@ -50,8 +50,7 @@ namespace CoffeeShop.API.Controllers
 
             return response.Status ? (IActionResult) Ok(response) : BadRequest(response);
         }
-
-        // get user id from token
+        
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutRequestModel model)
         {

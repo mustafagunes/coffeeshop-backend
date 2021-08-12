@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Interface;
-using Core.Model;
 using MediatR;
 
 namespace Data.Request.V1.Account
@@ -36,7 +35,7 @@ namespace Data.Request.V1.Account
 
         public async Task<RegisterDataRequestResponse> Handle(RegisterUserDataRequest request, CancellationToken cancellationToken)
         {
-            var userModel = new User
+            var userModel = new Core.Model.User
             {
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),

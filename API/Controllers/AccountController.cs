@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using CoffeeShop.API.Models;
 using CoffeeShop.API.Models.Account;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +31,7 @@ namespace CoffeeShop.API.Controllers
                 )
             );
             
-            return (response.Status == true) ? (IActionResult) Ok(response) : BadRequest(response);
+            return response.Status ? (IActionResult) Ok(response) : BadRequest(response);
         }
 
         # region legacy code

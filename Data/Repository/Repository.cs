@@ -71,6 +71,7 @@ namespace Data.Repository
         public TEntity Update(TEntity entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
+            Save();
             return entity;
         }
 
