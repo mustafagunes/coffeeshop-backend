@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Core.Model.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,7 @@ namespace CoffeeShop.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = Role.Admin + "," + Role.User)]
+    [Authorize(Roles = "1")] // 1 user tipini temsil eder.
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
